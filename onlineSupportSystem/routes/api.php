@@ -18,5 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('addTicket', [\App\Http\Controllers\Controller::class, 'addTicket']);
+Route::post('/register', [\App\Http\Controllers\Controller::class, 'register']);
+Route::post('/addTicket', [\App\Http\Controllers\Controller::class, 'addTicket']);
 

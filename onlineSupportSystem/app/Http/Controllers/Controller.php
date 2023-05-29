@@ -7,11 +7,41 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use App\Models\SupportTicket;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+
+
+    // register function for support agents
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:255|unique:users',
+            'password' => 'required|string|max:255',
+        ]);
+
+        try {
+            $user = User::create([
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
+            ]);
+
+            return response()->json([
+                'user' => $user,
+                'token' => $user->createToken('token')->plainTextToken,
+                'message' => 'Registered successfully'
+            ], 201);
+        } catch (\Exception $e) {
+            // Return the exception message as error message
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
     // add ticket function
 
