@@ -60,6 +60,7 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                     <div id="ticketData"></div>
+                    <div id="repliesData"></div>
                 </div>
 
             </div>
@@ -88,6 +89,20 @@
                 });
             });
 
+            // $('#getTicketDataForm').on('submit', function(e) {
+            //     e.preventDefault();
+            //     $.ajax({
+            //         type: 'POST',
+            //         url: '/api/getSupportTicketData',
+            //         data: $(this).serialize(),
+            //         success: function(response) {
+            //             $('#ticketData').html(JSON.stringify(response));
+            //         },
+            //         error: function(response) {
+            //             alert('Failed to Get Ticket Data!');
+            //         }
+            //     });
+            // });
             $('#getTicketDataForm').on('submit', function(e) {
                 e.preventDefault();
                 $.ajax({
@@ -95,7 +110,29 @@
                     url: '/api/getSupportTicketData',
                     data: $(this).serialize(),
                     success: function(response) {
-                        $('#ticketData').html(JSON.stringify(response));
+                        var isOpen = response.support_ticket.is_open === 1 ? 'Open' : 'Closed';
+                        $('#ticketData').html('<div class="card mt-4"><div class="card-body">' +
+                            '<h5 class="card-title">Support Ticket</h5>' +
+                            '<p class="card-text">Customer Name: ' + response.support_ticket.customer_name + '</p>' +
+                            '<p class="card-text">Problem Description: ' + response.support_ticket.problem_description + '</p>' +
+                            '<p class="card-text">Email: ' + response.support_ticket.email + '</p>' +
+                            '<p class="card-text">Phone Number: ' + response.support_ticket.phone_number + '</p>' +
+                            '<p class="card-text">Reference Number: ' + response.support_ticket.reference_number + '</p>' +
+                            '<p class="card-text">Ticket status: ' + isOpen + '</p>' +
+                            '<p class="card-text">Created At: ' + response.support_ticket.created_at + '</p>' +
+                            '</div></div>');
+
+                        var repliesHTML = '<div class="card mt-4"><div class="card-body">' +
+                            '<h5 class="card-title">Replies</h5>';
+
+                        response.replies.forEach(function(reply) {
+                            repliesHTML += 
+                                '<p class="card-text">Reply: ' + reply.reply + '</p>';
+                        });
+
+                        repliesHTML += '</div></div>';
+
+                        $('#repliesData').html(repliesHTML);
                     },
                     error: function(response) {
                         alert('Failed to Get Ticket Data!');
