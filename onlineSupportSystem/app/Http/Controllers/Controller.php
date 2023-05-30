@@ -11,6 +11,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class Controller extends BaseController
@@ -43,6 +45,35 @@ class Controller extends BaseController
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    //login function
+
+    public function login(Request $request)
+    {
+        if (!Auth::attempt($request->only('username', 'password'))) {
+            return response([
+                'message' => 'Invalid credentials!'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        /** @var \App\Models\User $user **/
+        $user = Auth::user();
+
+        $token = $user->createToken('token')->plainTextToken;
+
+        return response([
+            'message' => $token
+        ]);
+    }
+
+    public function user()
+    {
+        if (Auth::check()) {
+            /** @var \App\Models\User $user **/
+            return Auth::user();
+        }
+    }
+
 
     // add ticket function
 
