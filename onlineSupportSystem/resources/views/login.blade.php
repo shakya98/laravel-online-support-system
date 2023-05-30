@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Home</title>
+    <title>Login</title>
     <!-- Add Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
@@ -31,29 +31,32 @@
         </form>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script>
         $('#loginForm').submit(function(e) {
             e.preventDefault();
             $.ajax({
                 type: 'POST',
-                url: '{{ url("/api/login") }}',
+                url: 'http://127.0.0.1:8000/api/login',
                 data: $(this).serialize(),
+                dataType: 'json',
                 success: function(response) {
+                    console.log('Success response:', response);
                     if (response.message) {
-                        // Store the token in local storage
                         localStorage.setItem('token', response.message);
-                        // Redirect to user.blade view
+                        console.log('Token stored in localStorage:', localStorage.getItem('token'));
                         window.location.href = "{{ url('user') }}";
                     } else {
-                        alert("Login failed. Please try again.");
+                        console.error("Login failed. No token in response.");
                     }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    alert("Something went wrong. Please try again.");
+                    console.error("AJAX error: " + textStatus + ", " + errorThrown);
                 }
             });
         });
     </script>
+
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Register</title>
     <!-- Add Bootstrap CSS -->
@@ -53,4 +54,5 @@
         });
     </script>
 </body>
+
 </html>
