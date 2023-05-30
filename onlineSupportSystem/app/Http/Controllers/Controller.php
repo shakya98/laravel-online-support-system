@@ -79,4 +79,12 @@ class Controller extends BaseController
 
         return $supportTicket;
     }
+
+    // get all tickets function
+
+    public function getTickets()
+    {
+        $all_tickets = SupportTicket::get(['id', 'customer_name', 'problem_description', 'email', 'phone_number', 'reference_number', 'is_open']);
+        return $all_tickets;
+    }
 }
