@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('support_replies', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('support_ticket_id');
-            $table->text('reply')->nullable();
+            $table->text('reply');
             $table->timestamps();
             $table->foreign('support_ticket_id')->references('id')->on('support_tickets')->onDelete('cascade');
         });

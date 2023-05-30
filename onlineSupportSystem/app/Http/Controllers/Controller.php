@@ -10,6 +10,7 @@ use App\Models\SupportTicket;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 
 class Controller extends BaseController
@@ -86,5 +87,28 @@ class Controller extends BaseController
     {
         $all_tickets = SupportTicket::get(['id', 'customer_name', 'problem_description', 'email', 'phone_number', 'reference_number', 'is_open']);
         return $all_tickets;
+    }
+
+    // adding reply function
+
+    public function reply(Request $request, $id)
+    {
+        $request->validate([
+            'reply' => 'required',
+        ]);
+
+        $reply = DB::transaction(function () use ($request, $id) {
+            $replyData = [
+                'reply' => $request->input('reply'),
+            ];
+
+            $reply = SupportTicket::findOrFail($id)->replies()->create($replyData);
+
+            SupportTicket::where('id', $id)->update(['is_open' => false]);
+
+            return $reply;
+        });
+
+        return $reply;
     }
 }

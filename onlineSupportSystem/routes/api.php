@@ -23,4 +23,5 @@ Route::post('/addTicket', [\App\Http\Controllers\Controller::class, 'addTicket']
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getTickets', [\App\Http\Controllers\Controller::class, 'getTickets']);
+    Route::post('/reply/{id}', [\App\Http\Controllers\Controller::class, 'reply']);
 });
