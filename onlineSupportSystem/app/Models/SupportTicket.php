@@ -17,4 +17,9 @@ class SupportTicket extends Model
         'reference_number',
         'is_open',
     ];
+
+    public function replies()
+    {
+        return $this->hasMany(SupportReply::class);
+    }
 }
