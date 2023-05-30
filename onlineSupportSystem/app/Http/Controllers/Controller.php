@@ -111,4 +111,29 @@ class Controller extends BaseController
 
         return $reply;
     }
+
+    //get support ticket data function
+
+    public function getSupportTicketData(Request $request)
+    {
+        $request->validate([
+            'customer_name' => 'required',
+            'reference_number' => 'required',
+        ]);
+
+        $reference_number = $request->input('reference_number');
+        $customer_name = $request->input('customer_name');
+
+        $supportTicket = SupportTicket::where('reference_number', $reference_number)
+        ->where('customer_name', $customer_name)
+        ->first();
+
+        if (!$supportTicket) {
+            return response()->json(['error' => 'Support ticket not found.']);
+        }
+
+        $replies = $supportTicket->replies()->get();
+
+        return response()->json(['support_ticket' => $supportTicket, 'replies' => $replies]);
+    }
 }
